@@ -1,0 +1,88 @@
+<%- include('partials/header') %>
+<body>
+<div class="myContainer">
+  <div class="url-panel">
+    <div class="identity-panel">
+      <h1>ik.squeeze.it</h1>
+    </div>
+    <div class="user-panel">
+      <form class="item"  action="/editUser" method="post">
+        <button class="btn btn-secondary myBtn" type="submit" name="userId" value=<%=userInfo.currentUserId %> >Edit Profile</button>
+      </form>
+      <p id="greeting">Welcome <%= userInfo.firstname%> <%= userInfo.lastname%> </p>
+      <a  href="/logout" role="button" type="button" class="btn btn-light myBtn" >Log Out</a>
+    </div>
+    <form class="item" action="/add" method="post">
+    <div class="add-panel">
+      <div class="myForm-Group">
+        <h5>Create URL</h5>
+          <label class="myLabel" for="newUrlTitle">URL Title</label>
+          <input class="input-add" type="text" maxlength="50" name="newUrlTitle" placeholder="Add a title (max 50)" autocomplete="on" autofocus="true" required/>
+      </div>
+      <div class="myForm-Group">
+          <label class="myLabel" for="newUrl">URL</label>
+          <input class="input-add" type="url" name="newUrl" placeholder="Add a url" autocomplete="off" required/>
+      </div>
+      </br><button class="btn btn-success" type="submit" name="userId" value=<%=userInfo.currentUserId %> >Add</button>
+    </div>
+  </form>
+
+    <!-- Display user items -->
+ 
+    <% userProfile.forEach(element => { %>
+    <div class="url-card">
+      <form class="item"  action="/edit" method="post">
+        <!-- Title section -->
+        <div class="pair-container">
+          <h5 class="heading">Title:&nbsp;</h5>
+          <h5 class="full" id="title<%= element.url_card_id %>"><%= element.title %></h5>
+          <input class="input-edit" maxlength="50" id="titleInput<%= element.url_card_id %>" type="text" name="updatedCardTitle" value="<%= element.title %>" autocomplete="off" autofocus="true" hidden="true" />
+        </div>
+        <!-- Url section -->
+        <div class="pair-container">
+          <p class="heading">URL:&nbsp;&nbsp;&nbsp;&nbsp;</p>
+          <p class="full" id="url<%= element.url_card_id %>"><%= element.url %></p>
+          <input class="input-edit" id="urlInput<%= element.url_card_id %>" type="url" name="updatedCardUrl" value="<%= element.url %>" autocomplete="off" hidden="true" />
+        </div>
+        <!-- Short url section -->
+        <p><span class="heading">Shortened URL:&nbsp;</span><span id="shortUrl<%= element.url_card_id %>"><%= element.short_url %></span>
+          <svg id="copyId<%= element.url_card_id %>" onmousedown='copyUrl("<%= element.url_card_id %>","<%= element.short_url %>","<%= server %>")' xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy icons" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
+          </svg>
+          <a href="#" onmousedown='copyUrl("<%= element.url_card_id %>","<%= element.short_url %>","<%= server %>")'>Copy</a>
+        </p>
+        <div class="btn-pair-container">
+          <button type="submit" id="save<%= element.url_card_id %>" class="btn btn-success" hidden name="editCardId" value=<%=element.url_card_id %>>Save</button>
+      </form>
+          <button type="button"  id="edit<%= element.url_card_id %>" onclick="handler('<%= element.url_card_id %>')" class="btn btn-secondary">Edit</button>
+          <form class="item"  action="/delete" method="post">
+           <button type="submit" class="btn btn-danger" name="deleteCardId" value=<%= element.url_card_id %>>Delete</button>
+         </form>
+      </div>
+    </div>
+  <% }); %> 
+</div>
+</div>
+<script>
+  // To handle inline edits of url card
+  function handler(id){
+    document.getElementById(`title${id}`).setAttribute("hidden",true);
+    document.getElementById(`url${id}`).setAttribute("hidden",true);
+    document.getElementById(`edit${id}`).setAttribute("hidden",true);
+    document.getElementById(`titleInput${id}`).removeAttribute('hidden');
+    document.getElementById(`urlInput${id}`).removeAttribute('hidden');
+    document.getElementById(`save${id}`).removeAttribute('hidden');
+  }
+  // Animate copy icon to change color on mousedown 
+  function copyUrl(id,short_url,server){
+      const copyBtn = document.getElementById(`shortUrl${id}`);
+      const copyId = document.getElementById(`copyId${id}`);
+      //const fullUrl = copyBtn.getAttribute('href');
+      copyId.setAttribute('fill','#198754');
+      setTimeout(() => {
+        copyId.setAttribute('fill','#ffffff');
+      }, 400);
+      navigator.clipboard.writeText(server+short_url);
+  }
+</script>
+<%- include('partials/footer') %>

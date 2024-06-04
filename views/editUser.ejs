@@ -1,0 +1,33 @@
+<%- include('partials/header') %>
+
+<body>
+  <div class="myContainer">
+    <div class="panel-container">
+      <div class="panel">
+        <h1>Update your information</h1>
+        <form action="/updateUser" method="POST">
+          <div class="form-group">
+            <label class="myLabel" for="name">First Name</label>
+            <input type="text" class="form-control" name="userId" value="<%= userInfo.currentUserId %>" hidden/>
+            <input type="text" class="form-control" maxlength="50" name="firstname" value="<%= userInfo.firstname %>" required/>
+          </div>
+          <div class="form-group">
+            <label class="myLabel" for="lastname">Last Name</label>
+            <input type="text" class="form-control" maxlength="50" name="lastname" value="<%= userInfo.lastname %>" required/>
+          </div>
+          <div class="form-group">
+            <label class="myLabel" for="email">Email</label>
+            <input type="email" class="form-control" name="username" value="<%= userInfo.userName %>" required/>
+          </div>
+          <div class="form-group">
+            <label class="myLabel" for="password" >New Password</label>
+            <input type="password" class="form-control" name="password" />
+          </div>
+          <button type="submit" class="btn btn-success">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <%- include('partials/footer') %>
+
